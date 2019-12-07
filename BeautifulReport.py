@@ -105,6 +105,12 @@ class MakeResultJson:
         )
         for key, data in zip(keys, self.datas):
             self.result_schema.setdefault(key, data)
+        # 这里处理用例失败时候日志不分行情况
+        if self.result_schema["status"] == "失败":
+            t = self.result_schema["log"][0].split("\n")
+            for i in t:
+                self.result_schema["log"][0] = ""
+                self.result_schema["log"].append(i)
         return json.dumps(self.result_schema)
 
 
